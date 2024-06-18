@@ -919,6 +919,8 @@ static int jtag_examine_chain_execute(uint8_t *idcode_buffer, unsigned num_idcod
 	for (unsigned i = 0; i < num_idcode; i++)
 		buf_set_u32(idcode_buffer, i * 32, 32, END_OF_CHAIN_FLAG);
 
+  // printf("reading tap bits=%d\r\n", field.num_bits);
+
 	jtag_add_plain_dr_scan(field.num_bits, field.out_value, field.in_value, TAP_DRPAUSE);
 	jtag_add_tlr();
 	return jtag_execute_queue();
@@ -1072,6 +1074,7 @@ static int jtag_examine_chain(void)
 	unsigned bit_count = 0;
 	unsigned autocount = 0;
 	for (unsigned i = 0; i < max_taps; i++) {
+
 		assert(bit_count < max_taps * 32);
 		uint32_t idcode = buf_get_u32(idcode_buffer, bit_count, 32);
 

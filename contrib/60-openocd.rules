@@ -118,6 +118,15 @@ ATTRS{idVendor}=="138e", ATTRS{idProduct}=="9000", MODE="660", GROUP="plugdev", 
 # Debug Board for Neo1973
 ATTRS{idVendor}=="1457", ATTRS{idProduct}=="5118", MODE="660", GROUP="plugdev", TAG+="uaccess"
 
+# Microchip (Microsemi/Actel) FlashPro
+# FlashPro5
+ATTRS{idVendor}=="1514", ATTRS{idProduct}=="2008", MODE="660", GROUP="plugdev", TAG+="uaccess"
+# FlashPro6
+ATTRS{idVendor}=="1514", ATTRS{idProduct}=="2009", MODE="660", GROUP="plugdev", TAG+="uaccess"
+# embeddedFlashPro6 (revision A and revision B)
+KERNEL=="hidraw*", ATTRS{idVendor}=="1514", ATTRS{idProduct}=="200a", GROUP="plugdev", TAG+="uaccess", MODE="0660", SYMLINK+="eFlashPro6_revA_obsolete  eFlashPro6_revA_obsolete_$attr{serial}"
+KERNEL=="hidraw*", ATTRS{idVendor}=="1514", ATTRS{idProduct}=="200b", GROUP="plugdev", TAG+="uaccess", MODE="0660", SYMLINK+="eFlashPro6_revB  eFlashPro6_revB_$attr{serial}"
+
 # Olimex ARM-USB-OCD
 ATTRS{idVendor}=="15ba", ATTRS{idProduct}=="0003", MODE="660", GROUP="plugdev", TAG+="uaccess"
 

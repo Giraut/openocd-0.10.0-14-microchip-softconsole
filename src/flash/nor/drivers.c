@@ -53,6 +53,13 @@ extern const struct flash_driver lpc2900_flash;
 extern const struct flash_driver lpcspifi_flash;
 extern const struct flash_driver max32xxx_flash;
 extern const struct flash_driver mdr_flash;
+/* <MICROSEMI> */
+#if BUILD_MICROSEMI_MODS == 1
+extern const struct flash_driver microsemi_fusion_coreahbnvm_flash;
+extern const struct flash_driver microsemi_smartfusion_envm_flash;
+extern const struct flash_driver microsemi_smartfusion2_envm_flash;
+#endif /* BUILD_MICROSEMI_MODS == 1 */
+/* </MICROSEMI> */
 extern const struct flash_driver mrvlqspi_flash;
 extern const struct flash_driver msp432_flash;
 extern const struct flash_driver niietcm4_flash;
@@ -123,6 +130,13 @@ static const struct flash_driver * const flash_drivers[] = {
 	&lpcspifi_flash,
 	&max32xxx_flash,
 	&mdr_flash,
+/* <MICROSEMI> */
+#if BUILD_MICROSEMI_MODS == 1
+	&microsemi_fusion_coreahbnvm_flash,
+	&microsemi_smartfusion_envm_flash,
+	&microsemi_smartfusion2_envm_flash,
+#endif /* BUILD_MICROSEMI_MODS == 1 */
+/* </MICROSEMI> */
 	&mrvlqspi_flash,
 	&msp432_flash,
 	&niietcm4_flash,

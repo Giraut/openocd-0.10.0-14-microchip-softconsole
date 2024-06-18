@@ -1121,12 +1121,39 @@ static void gdb_str_to_target(struct target *target,
 	uint8_t *buf;
 	int buf_len;
 	buf = reg->value;
+
+	static int k = 1;
+
+//Anton hacks, if 64-bit little endian register, just return what is expected directly
+
 	buf_len = DIV_ROUND_UP(reg->size, 8);
 
-	for (i = 0; i < buf_len; i++) {
-		int j = gdb_reg_pos(target, i, buf_len);
-		tstr += sprintf(tstr, "%02x", buf[j]);
+	// buf[7] = reg->number+2;
+
+	if (buf_len == 8  && target->endianness == TARGET_LITTLE_ENDIAN ) {
+		tstr += sprintf(tstr, "%02x%02x%02x%02x%02x%02x%02x%02x", buf[0], buf[1], buf[2], buf[3], buf[4], buf[5], buf[6], buf[7]);
+		// printf("%d = %02x%02x%02x%02x%02x%02x%02x%02x \r\n", reg->number, buf[0], buf[1], buf[2], buf[3], buf[4], buf[5], buf[6], buf[7]);
+		// printf("%d = %16hhn \r\n", reg->number, buf);
 	}
+	else {
+		for (i = 0; i < buf_len; i++) {
+			int j = gdb_reg_pos(target, i, buf_len);
+			// printf("%d ",j);
+
+			// if (i==0) {
+			// 	tstr += sprintf(tstr, "%02x", k);
+			// 	// printf("%02x", k);
+			// }
+			// else {
+				tstr += sprintf(tstr, "%02x", buf[j]);
+				// printf("%02x", buf[j]);
+
+			// }
+		}
+	}
+	k++;
+	// printf("%s", tstr);
+	// printf("\r\n");
 }
 
 /* copy over in register buffer */
@@ -1431,6 +1458,21 @@ static int gdb_read_memory_packet(struct connection *connection,
 	packet++;
 
 	addr = strtoull(packet, &separator, 16);
+  // printf("Got request to read from %016lx \r\n", addr);
+
+// Anton ugly hacks, delete this
+// Skipping reads from 0 to 62 (and bit further as well because the addr + len)
+  // if (addr <= 0x62) {
+	// 	// printf("Got request to read from %d (len=%d), i'm responding with fake read ---------------------------- \r\n", addr, len);
+	// 	printf("Got request to read from %ld, i'm responding with fake (and bad) read response ---------------------------- \r\n", addr);
+	// 	memset(buffer, 0, len);
+	// 	hex_buffer = malloc(len * 2 + 1);
+	// 	size_t pkt_len = hexify(hex_buffer, buffer, len, len * 2 + 1);
+	// 	gdb_put_packet(connection, hex_buffer, pkt_len);
+	// 	free(hex_buffer);
+	// 	return ERROR_OK;
+	// }
+
 
 	if (*separator != ',') {
 		LOG_ERROR("incomplete read memory packet received, dropping connection");
@@ -1444,6 +1486,7 @@ static int gdb_read_memory_packet(struct connection *connection,
 		gdb_put_packet(connection, "", 0);
 		return ERROR_OK;
 	}
+
 
 	buffer = malloc(len);
 
@@ -2534,6 +2577,7 @@ static int gdb_generate_thread_list(struct target *target, char **thread_list_ou
 		   "<threads>\n");
 
 	if (rtos != NULL) {
+//		printf("rtos thread count %d -------------------------------------- \r\n", rtos->thread_count);
 		for (int i = 0; i < rtos->thread_count; i++) {
 			struct thread_detail *thread_detail = &rtos->thread_details[i];
 
@@ -2541,7 +2585,7 @@ static int gdb_generate_thread_list(struct target *target, char **thread_list_ou
 				continue;
 
 			xml_printf(&retval, &thread_list, &pos, &size,
-				   "<thread id=\"%" PRIx64 "\">", thread_detail->threadid);
+				   "<thread id=\"%" PRIx64 "\" core=\"%" PRIx64 "\">", thread_detail->threadid, thread_detail->threadid);
 
 			if (thread_detail->thread_name_str != NULL)
 				xml_printf(&retval, &thread_list, &pos, &size,

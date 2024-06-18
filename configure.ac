@@ -303,6 +303,16 @@ AC_ARG_ENABLE([gw16012],
   AS_HELP_STRING([--enable-gw16012], [Enable building support for the Gateworks GW16012 JTAG Programmer]),
   [build_gw16012=$enableval], [build_gw16012=no])
 
+# <MICROSEMI>
+AC_ARG_ENABLE([branding],
+  AS_HELP_STRING([--enable-branding], [Add a branding string to the greeting message]),
+  [build_branding=$enableval], [build_branding=none])
+
+AC_ARG_ENABLE([microsemi_mods],
+  AS_HELP_STRING([--enable-microsemi-mods], [Enable building support for Microsemi devices]),
+  [build_microsemi_mods=$enableval], [build_microsemi_mods=no])
+# </MICROSEMI>
+
 AC_ARG_ENABLE([oocd_trace],
   AS_HELP_STRING([--enable-oocd_trace],
   [Enable building support for some prototype OpenOCD+trace ETM capture hardware]),
@@ -357,6 +367,9 @@ AC_ARG_ENABLE([remote-bitbang],
   AS_HELP_STRING([--enable-remote-bitbang], [Enable building support for the Remote Bitbang jtag driver]),
   [build_remote_bitbang=$enableval], [build_remote_bitbang=no])
 
+AC_ARG_ENABLE([ust-jtagprobe],
+  AS_HELP_STRING([--enable-ust-jtagprobe], [Enable building support for the UltraSoC Technologies jtagprobe interface]),
+  [build_ust_jtagprobe=$enableval], [build_ust_jtagprobe=no])
 AC_MSG_CHECKING([whether to enable dummy minidriver])
 AS_IF([test "x$build_minidriver_dummy" = "xyes"], [
   AS_IF([test "x$build_minidriver" = "xyes"], [
@@ -547,6 +560,19 @@ AS_IF([test "x$build_gw16012" = "xyes"], [
   AC_DEFINE([BUILD_GW16012], [0], [0 if you don't want the Gateworks GW16012 driver.])
 ])
 
+# <MICROSEMI>
+AS_IF([test "x$build_branding" = "xnone"], [
+], [
+  AC_DEFINE_UNQUOTED([BUILD_BRANDING], ["$build_branding"], [The branding string.])
+])
+
+AS_IF([test "x$build_microsemi_mods" = "xyes"], [
+  AC_DEFINE([BUILD_MICROSEMI_MODS], [1], [1 if you want support for the Microsemi devices.])
+], [
+  AC_DEFINE([BUILD_MICROSEMI_MODS], [0], [0 if you don't want support for the Microsemi devices.])
+])
+# </MICROSEMI>
+
 AS_IF([test "x$build_oocd_trace" = "xyes"], [
   AC_DEFINE([BUILD_OOCD_TRACE], [1], [1 if you want the OpenOCD+trace ETM capture driver.])
 ], [
@@ -574,6 +600,11 @@ AS_IF([test "x$build_remote_bitbang" = "xyes"], [
   AC_DEFINE([BUILD_REMOTE_BITBANG], [0], [0 if you don't want the Remote Bitbang JTAG driver.])
 ])
 
+AS_IF([test "x$build_ust_jtagprobe" = "xyes"], [
+  AC_DEFINE([BUILD_UST_JTAGPROBE], [1], [1 if you want the UltraSoC Jtagprobe driver.])
+], [
+  AC_DEFINE([BUILD_UST_JTAGPROBE], [0], [0 if you don't want UltraSoC Jtagprobe driver.])
+])
 AS_IF([test "x$build_sysfsgpio" = "xyes"], [
   build_bitbang=yes
   AC_DEFINE([BUILD_SYSFSGPIO], [1], [1 if you want the SysfsGPIO driver.])
@@ -715,6 +746,7 @@ AM_CONDITIONAL([TARGET64], [test "x$build_target64" = "xyes"])
 AM_CONDITIONAL([MINIDRIVER], [test "x$build_minidriver" = "xyes"])
 AM_CONDITIONAL([MINIDRIVER_DUMMY], [test "x$build_minidriver_dummy" = "xyes"])
 
+AM_CONDITIONAL([UST_JTAGPROBE], [test x$build_ust_jtagprobe = "xyes"])
 AM_CONDITIONAL([INTERNAL_JIMTCL], [test "x$use_internal_jimtcl" = "xyes"])
 AM_CONDITIONAL([INTERNAL_LIBJAYLINK], [test "x$use_internal_libjaylink" = "xyes"])
 

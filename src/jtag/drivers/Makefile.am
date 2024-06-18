@@ -73,6 +73,22 @@ DRIVERFILES += %D%/dummy.c
 endif
 if FTDI
 DRIVERFILES += %D%/ftdi.c %D%/mpsse.c
+# <MICROSEMI>
+# For new win64/linux64 split (fpserver) build
+DRIVERFILES += %D%/microsemi_flashpro/microsemi_efp6_client2.c
+DRIVERFILES += %D%/microsemi_flashpro/microsemi_efp6_client1.c
+DRIVERFILES += %D%/microsemi_flashpro/microsemi_fpcommwrapper_client.c
+DRIVERFILES += %D%/microsemi_flashpro/microsemi_flashpro.c 
+DRIVERFILES += %D%/microsemi_flashpro/microsemi_api_calls.c
+DRIVERFILES += %D%/microsemi_flashpro/microsemi_socket_client.c
+DRIVERFILES += %D%/microsemi_flashpro/microsemi_timeout.c
+DRIVERFILES += %D%/microsemi_flashpro/microsemi_serialize.c
+DRIVERFILES += %D%/microsemi_flashpro/microsemi_parse.c
+# For legacy win32/linux32 "integrated" build
+# To build this version uncomment the following line and comment out the 
+# above DRIVERFILES += ... lines for the 64 bit version
+# DRIVERFILES += %D%/microsemi_flashpro/microsemi_flashpro_integrated.c 
+# </MICROSEMI>
 endif
 if JTAG_VPI
 DRIVERFILES += %D%/jtag_vpi.c
@@ -164,6 +180,10 @@ if XDS110
 DRIVERFILES += %D%/xds110.c
 endif
 
+if UST_JTAGPROBE
+DRIVERFILES += %D%/ust_jtagprobe/ust_driver.c
+DRIVERFILES += %D%/ust_jtagprobe/ust_jtagprobe.c
+endif
 DRIVERHEADERS = \
 	%D%/bitbang.h \
 	%D%/bitq.h \
@@ -182,5 +202,5 @@ DRIVERHEADERS = \
 	%D%/versaloon/usbtoxxx/usbtoxxx_internal.h \
 	%D%/versaloon/versaloon.h \
 	%D%/versaloon/versaloon_include.h \
-	%D%/versaloon/versaloon_internal.h
-
+	%D%/versaloon/versaloon_internal.h \
+	%D%/ust_jtagprobe/ust_jtagprobe.h
