@@ -1,0 +1,10 @@
+--- libusb-compat-0.1.5/libusb.pc.in	2013-05-07 14:26:05.000000000 +0100
++++ libusb-compat-0.1.5/libusb.pc.in-patched	2020-09-24 17:04:40.165416927 +0100
+@@ -10,6 +10,6 @@ Name: libusb
+ Description: USB access library (libusb-1.0 compat wrapper)
+ Version: @LIBUSB01_VERSION@
+ Requires.private: libusb-1.0
+-Libs: -L${libdir} -lusb
++Libs: -L${libdir} -l:libusb.a
+ Cflags: -I${includedir}
+ 

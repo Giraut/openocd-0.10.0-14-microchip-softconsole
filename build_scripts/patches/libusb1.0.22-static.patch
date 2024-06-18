@@ -1,0 +1,10 @@
+--- libusb-1.0.22/libusb-1.0.pc.in	2018-03-17 07:23:37.000000000 +0000
++++ libusb-1.0.22/libusb-1.0.pc.in-patched	2020-09-24 16:44:15.841249360 +0100
+@@ -6,6 +6,6 @@ includedir=@includedir@
+ Name: libusb-1.0
+ Description: C API for USB device access from Linux, Mac OS X, Windows, OpenBSD/NetBSD and Solaris userspace
+ Version: @VERSION@
+-Libs: -L${libdir} -lusb-1.0
++Libs: -L${libdir} -l:libusb-1.0.a
+ Libs.private: @LIBS@
+ Cflags: -I${includedir}/libusb-1.0

@@ -1,0 +1,9 @@
+--- libftdi1-1.4/libftdi1.pc.in	2017-08-07 15:52:39.000000000 +0100
++++ libftdi1-1.4/libftdi1.pc.in-patched	2020-09-24 17:25:27.425763492 +0100
+@@ -7,5 +7,5 @@ Name: libftdi1
+ Description: Library to program and control the FTDI USB controller
+ Requires: libusb-1.0
+ Version: @VERSION@
+-Libs: -L${libdir} -lftdi1
++Libs: -L${libdir} -l:libftdi1.a
+ Cflags: -I${includedir}
